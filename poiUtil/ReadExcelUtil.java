@@ -162,6 +162,18 @@ public class ReadExcelUtil {
             Object value;
             if (type == Date.class) {
                 value = cell.getDateCellValue();
+            } else if(0 == cell.getCellType()) {
+            	//判断是否为日期类型
+            	if(HSSFDateUtil.isCellDateFormatted(cell)){
+            		//用于转化为日期格式
+	            	Date d = cell.getDateCellValue();
+	            	DateFormat formater = new SimpleDateFormat("yyyy-MM-dd");
+	            	value = formater.format(d);
+            	}else{
+            		// 用于格式化数字，只保留数字的整数部分
+	            	DecimalFormat df = new DecimalFormat("########");
+	            	value = df.format(cell.getNumericCellValue());
+            	}
             } else {
                 // 设置单元格的类型为字符串类型
                 cell.setCellType(Cell.CELL_TYPE_STRING);
